@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Appointment;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class AppointmentController extends Controller
 {
@@ -13,7 +14,18 @@ class AppointmentController extends Controller
     }
     
     public function store(Request $request) {
-
+        try {
+            $request->validate([
+                "name" => "string|max:255",
+                "barber_id" => "integer",
+                "appointment" => "datetime"
+            ]);
+        } catch (ValidationException $ex) {
+            return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
+        }
+        
+        Appointment::create($request->all());
+        return response()->json(["success" => true, "message"=> "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
     
     public function destroy(Request $request) {

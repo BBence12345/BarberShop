@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("name");
             $table->foreignId("barber_id")->constrained("barbers")->onDelete("cascade");
             $table->dateTime("appointment");
+            $table->timestamps();
         });
     }
 

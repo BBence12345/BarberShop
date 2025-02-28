@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Barber;
 use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class BarberController extends Controller
 {
@@ -13,7 +14,16 @@ class BarberController extends Controller
     }
     
     public function store(Request $request) {
-
+        try {
+            $request->validate([
+                "barber_name" => "string|max:255"
+            ]);
+        } catch (ValidationException $ex) {
+            return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
+        }
+        
+        Barber::create($request->all());
+        return response()->json(["success" => true, "message"=> "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
     
     public function destroy(Request $request) {
