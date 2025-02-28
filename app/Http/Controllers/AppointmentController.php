@@ -16,9 +16,19 @@ class AppointmentController extends Controller
     public function store(Request $request) {
         try {
             $request->validate([
-                "name" => "string|max:255",
-                "barber_id" => "integer",
-                "appointment" => "datetime"
+                "name" => "required|string|max:255",
+                "barber_id" => "required|integer",
+                "appointment" => "required|date"
+            ], [
+                "string" => "A(z) :attribute mezőnek szövegesnek kell lennie!",
+                "integer" => "A(z) :attribute mezőnek egész számnak kell lennie!",
+                "max" => "A(z) :attribute mező maximum :max karakter hosszú lehet!",
+                "date" => "A(z) :attribute mezőnek dátumnak kell lennie!",
+                "required" => "A(z) :attribute mező kötelező!"
+            ], [
+                "name" => "név",
+                "barber_id" => "fodrász id",
+                "appointment" => "időpont"
             ]);
         } catch (ValidationException $ex) {
             return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);

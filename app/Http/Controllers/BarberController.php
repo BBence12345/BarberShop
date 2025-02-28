@@ -16,7 +16,13 @@ class BarberController extends Controller
     public function store(Request $request) {
         try {
             $request->validate([
-                "barber_name" => "string|max:255"
+                "barber_name" => "required|string|max:255"
+            ], [
+                "string" => "A(z) :attribute mezőnek szövegesnek kell lennie!",
+                "max" => "A(z) :attribute mező maximum :max karakter hosszú lehet!",
+                "required" => "A(z) :attribute mező kötelező!"
+            ], [
+                "barber_name" => "fodrász név"
             ]);
         } catch (ValidationException $ex) {
             return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
