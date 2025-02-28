@@ -25,19 +25,19 @@ class BarberController extends Controller
                 "barber_name" => "fodrász név"
             ]);
         } catch (ValidationException $ex) {
-            return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(["success" => false, "message" => $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
         }
         
         Barber::create($request->all());
-        return response()->json(["success" => true, "message"=> "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(["success" => true, "message" => "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
     
     public function destroy(Request $request) {
         $barber = Barber::find($request->id);
         if ($barber == null) {
-            return response()->json(["success" => false, "message"=> "Nem található!"], 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(["success" => false, "message" => "Nem található!"], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $barber->delete();
-        return response()->json(["success" => true, "message"=> "Sikeres törlés!"], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(["success" => true, "message" => "Sikeres törlés!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }

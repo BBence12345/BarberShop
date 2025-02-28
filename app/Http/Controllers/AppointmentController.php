@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Appointment;
+use App\Models\Barber;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
@@ -14,6 +15,11 @@ class AppointmentController extends Controller
     }
     
     public function store(Request $request) {
+        $barber = Barber::find($request->barber_id);
+        if ($barber == null) {
+            return response()->json(["success" => false, "message" => "A fodrász nem található!"], 404, [], JSON_UNESCAPED_UNICODE);
+        }
+
         try {
             $request->validate([
                 "name" => "required|string|max:255",
@@ -31,19 +37,19 @@ class AppointmentController extends Controller
                 "appointment" => "időpont"
             ]);
         } catch (ValidationException $ex) {
-            return response()->json(["success" => false, "message"=> $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(["success" => false, "message" => $ex->getMessage()], 400, [], JSON_UNESCAPED_UNICODE);
         }
         
         Appointment::create($request->all());
-        return response()->json(["success" => true, "message"=> "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(["success" => true, "message" => "Sikeres létrehozás!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
     
     public function destroy(Request $request) {
         $appointment = Appointment::find($request->id);
         if ($appointment == null) {
-            return response()->json(["success" => false, "message"=> "Nem található!"], 404, [], JSON_UNESCAPED_UNICODE);
+            return response()->json(["success" => false, "message" => "Nem található!"], 404, [], JSON_UNESCAPED_UNICODE);
         }
         $appointment->delete();
-        return response()->json(["success" => true, "message"=> "Sikeres törlés!"], 200, [], JSON_UNESCAPED_UNICODE);
+        return response()->json(["success" => true, "message" => "Sikeres törlés!"], 200, [], JSON_UNESCAPED_UNICODE);
     }
 }
